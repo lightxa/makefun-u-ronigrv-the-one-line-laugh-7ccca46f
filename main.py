@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+"""The One-Line Laugh entry.
+
+Writes a single original one-line joke to /output/entry.txt
+(or $MAKEFUN_OUTPUT_DIR/entry.txt). Pure stdlib, deterministic,
+no network at runtime.
+"""
+
+import os
+from pathlib import Path
+
+LINE = "I told the GPS I knew a shortcut and now I'm in a field apologising to a goat."
+
+
+def main() -> None:
+    text = LINE.strip()
+    if not 1 <= len(text) <= 200:
+        raise SystemExit(f"entry must be 1-200 characters, got {len(text)}")
+    if text.count(".") != 1 or not text.endswith("."):
+        raise SystemExit("entry must be a single sentence")
+    out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "entry.txt").write_text(text, encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()
